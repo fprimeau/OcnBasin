@@ -2,7 +2,7 @@ module OcnBasin
 
 export basin
 
-using DelimitedFiles, Interpolations
+using GZip, DelimitedFiles, Interpolations
 cd(dirname(@__FILE__));
 # WOCE Pacific Ocean Basin Boundaries
 # Longitude band | Southern Latitude | Northern Latitude
@@ -27,7 +27,8 @@ cd(dirname(@__FILE__));
 #  84ᵒW -  90ᵒW	 |  14ᵒN	           |  90ᵒN
 #  90ᵒW - 100ᵒW	 |  18ᵒN	           |  90ᵒN
 # 100ᵒW - 100ᵒE	 |  66ᵒN	           |  90ᵒN
-msk = readdlm("basin_mask.txt",',',Int);
+fh = GZip.open("basin_mask.txt.gz");
+msk = readdlm(fh,',',Int);
 itp = interpolate(msk,(BSpline(Constant()),BSpline(Constant())))
 x = range(-180,stop = 180,length = 21601);
 y = range(-90,stop = 90, length = 10801);
